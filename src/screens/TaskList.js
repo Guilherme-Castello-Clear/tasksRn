@@ -7,23 +7,33 @@ import 'moment/locale/pt-br';
 import commonStyles from '../commonStyles';
 import Task from '../components/Task';
 
-
 export default class TaskList extends Component {
-
   state = {
-    tasks: [{
-      id: Math.random(),
-      desc: "Comprar livro",
-      estimateAt: new Date(),
-      doneAt: new Date(),
-    },
-    {
-      id: Math.random(),
-      desc: "Ler livro",
-      estimateAt: new Date(),
-      doneAt: null,
-    }]
-}
+    tasks: [
+      {
+        id: Math.random(),
+        desc: 'Comprar livro',
+        estimateAt: new Date(),
+        doneAt: new Date(),
+      },
+      {
+        id: Math.random(),
+        desc: 'Ler livro',
+        estimateAt: new Date(),
+        doneAt: null,
+      },
+    ],
+  };
+
+  toggleTask = async taskId => {
+    const tasks = [...this.state.tasks]
+    tasks.forEach(task => {
+      if(task.id === taskId){
+        task.doneAt = task.doneAt ? null : new Date()
+      }
+    })
+    this.setStaste({tasks})
+  };
 
   render() {
     const today = moment()
@@ -39,7 +49,11 @@ export default class TaskList extends Component {
           </View>
         </ImageBackground>
         <View style={styles.taskList}>
-          <FlatList data={this.state.tasks} keyExtractor={item => `${item.id}`} readerItem={({item}) => <Task {...item} />}/>
+          <FlatList
+            data={this.state.tasks}
+            keyExtractor={item => `${item.id}`}
+            readerItem={({item}) => <Task {...item} toggleTask={this.toggleTask} />}
+          />
         </View>
       </View>
     );

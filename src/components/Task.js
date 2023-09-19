@@ -15,7 +15,11 @@ export default props => {
     .format('ddd, D [de] MMMM');
   return (
     <View style={styles.container}>
-      <View style={styles.checkContainer}>{getCheckView()}</View>
+      <TouchableWithoutFeedback onPress={() => props.toggleTask(props.id)}>
+        <View style={styles.checkContainer}>
+          {getCheckView()}
+        </View>
+      </TouchableWithoutFeedback>
       <View>
         <Text style={[styles.desc, doneOrNotStyle]}>{props.desc}</Text>
         <Text style={styles.date}>{formattedDate}</Text>
