@@ -2,8 +2,17 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import commonStyles from '../commonStyles';
+import moment from 'moment';
+import 'moment/locale/pt-br';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export default props => {
+  const doneOrNotStyle =
+    props.doneAt != null ? {textDecorationLine: 'line-through'} : {};
+
+  const date = props.doneAt ? props.doneAt : props.estimateAt;
+  const formattedDate = moment(date)
+    .locale('pt-br')
+    .format('ddd, D [de] MMMM');
   return (
     <View style={styles.container}>
       <View style={styles.checkContainer}>{getCheckView()}</View>
