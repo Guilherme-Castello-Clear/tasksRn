@@ -17,6 +17,8 @@ import Task from '../components/Task';
 
 export default class TaskList extends Component {
   state = {
+    visibleTasks: [],
+
     showDoneTasks: true,
     tasks: [
       {
@@ -35,7 +37,7 @@ export default class TaskList extends Component {
   };
 
   toggleFilter = () => {
-    this.setState({showDoneTasks: !this.state.showDoneTasks});
+    this.setState({showDoneTasks: !this.state.showDoneTasks}, this.filterTasks);
   };
 
   toggleTask = async taskId => {
@@ -45,7 +47,23 @@ export default class TaskList extends Component {
         task.doneAt = task.doneAt ? null : new Date();
       }
     });
-    this.setStaste({tasks});
+    this.setStaste({tasks}, this.filterTasks);
+  };
+
+  componentDidMount = () => {
+    this.filterTasks()
+  }
+
+  filterTasks = () => {
+    let visibleTasks = null;
+    if (this.state.showDoneTasks) {
+      visibleTasks = [...this.state.tasks];
+    } else {
+      const pending = task => task.doneAt === null;
+      visibleTasks = this.state.tasks.filter(pending);
+    }
+
+    this.setState({visibleTasks});
   };
 
   render() {
@@ -58,7 +76,11 @@ export default class TaskList extends Component {
         <ImageBackground style={styles.background} source={todayImage}>
           <View style={styles.iconBar}>
             <TouchableOpacity onPress={this.toggleFilter}>
-              <Icon name={this.state.showDoneTasks ? "eye" : "eye-slash"} size={20} color={commonStyles.colors.secondary}/>
+              <Icon
+                name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
+                size={20}
+                color={commonStyles.colors.secondary}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.titleBar}>
@@ -68,7 +90,7 @@ export default class TaskList extends Component {
         </ImageBackground>
         <View style={styles.taskList}>
           <FlatList
-            data={this.state.tasks}
+            data={this.state.visibleTasks}
             keyExtractor={item => `${item.id}`}
             readerItem={({item}) => (
               <Task {...item} toggleTask={this.toggleTask} />
