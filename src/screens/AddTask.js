@@ -45,6 +45,16 @@ export default class AddTask extends Component {
     return datePicker;
   };
 
+  save = () => {
+    const newTask = {
+      desc: this.state.desc,
+      date: this.state.date,
+    };
+
+    this.props.onSave && this.props.onSave(newTask);
+    this.setState({...initialState});
+  };
+
   render() {
     return (
       <Modal

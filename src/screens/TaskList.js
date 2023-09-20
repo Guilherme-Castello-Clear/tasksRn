@@ -66,6 +66,24 @@ export default class TaskList extends Component {
     this.setState({visibleTasks});
   };
 
+  addTask = async newTask => {
+    if (!newTask.desc || !newTask.desc.trim()) {
+      Alert.alert('Dados Inválidos', 'Descrição não informada!');
+      return;
+    }
+
+    try {
+      await axios.post(`${server}/tasks`, {
+        desc: newTask.desc,
+        estimateAt: newTask.date,
+      });
+
+      this.setState({showAddTask: false}, this.loadTasks);
+    } catch (e) {
+      showError(e);
+    }
+  };
+
   render() {
     const today = moment()
       .locale('pt-br')
