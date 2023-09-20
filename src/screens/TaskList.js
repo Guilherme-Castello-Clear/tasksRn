@@ -18,7 +18,7 @@ import AddTask from './AddTask';
 export default class TaskList extends Component {
   state = {
     visibleTasks: [],
-    showAddTask: true,
+    showAddTask: false,
     showDoneTasks: true,
     tasks: [
       {
@@ -51,8 +51,8 @@ export default class TaskList extends Component {
   };
 
   componentDidMount = () => {
-    this.filterTasks()
-  }
+    this.filterTasks();
+  };
 
   filterTasks = () => {
     let visibleTasks = null;
@@ -101,6 +101,12 @@ export default class TaskList extends Component {
             )}
           />
         </View>
+        <TouchableOpacity
+          style={[styles.addButton]}
+          activeOpacity={0.7}
+          onPress={() => this.setState({showAddTask: true})}>
+          <Icon name="plus" size={20} color={commonStyles.colors.secondary} />
+        </TouchableOpacity>
       </View>
     );
   }

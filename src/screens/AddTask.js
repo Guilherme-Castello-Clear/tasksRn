@@ -9,7 +9,13 @@ import {
   TextInput,
 } from 'react-native';
 
+const initialState = {desc: ''};
+
 export default class AddTask extends Component {
+  state = {
+    ...initialState,
+  };
+
   render() {
     return (
       <Modal
