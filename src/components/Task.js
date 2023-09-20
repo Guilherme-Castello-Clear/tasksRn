@@ -1,10 +1,14 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {
+  Swipeable,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 import commonStyles from '../commonStyles';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import 'react-native-gesture-handler/Swipeable';
 export default props => {
   const doneOrNotStyle =
     props.doneAt != null ? {textDecorationLine: 'line-through'} : {};
@@ -13,18 +17,41 @@ export default props => {
   const formattedDate = moment(date)
     .locale('pt-br')
     .format('ddd, D [de] MMMM');
-  return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => props.toggleTask(props.id)}>
-        <View style={styles.checkContainer}>
-          {getCheckView()}
-        </View>
-      </TouchableWithoutFeedback>
-      <View>
-        <Text style={[styles.desc, doneOrNotStyle]}>{props.desc}</Text>
-        <Text style={styles.date}>{formattedDate}</Text>
+
+  const getRightContent = () => {
+    return (
+      <TouchableOpacity
+        style={styles.right}
+        onPress={() => props.onDelete && props.onDelete(props.id)}>
+        <Icon name="trash" size={30} color="#FFF" />
+      </TouchableOpacity>
+    );
+  };
+
+  const getLeftContent = () => {
+    return (
+      <View style={styles.left}>
+        <Icon name="trash" size={20} color="#FFF" style={styles.excludeIcon} />
+        <Text style={styles.excludeText}>Excluir</Text>
       </View>
-    </View>
+    );
+  };
+
+  return (
+    <Swipeable
+    renderRightActions={getRightContent}
+    renderLeftActions={getLeftContent}
+    onSwipeableLeftOpen={() => {props.onDelete && props.onDelete(props.id)}}>
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => props.toggleTask(props.id)}>
+          <View style={styles.checkContainer}>{getCheckView()}</View>
+        </TouchableWithoutFeedback>
+        <View>
+          <Text style={[styles.desc, doneOrNotStyle]}>{props.desc}</Text>
+          <Text style={styles.date}>{formattedDate}</Text>
+        </View>
+      </View>
+    </Swipeable>
   );
 };
 

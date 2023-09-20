@@ -66,22 +66,26 @@ export default class TaskList extends Component {
     this.setState({visibleTasks});
   };
 
-  addTask = async newTask => {
+  addTask = newTask => {
     if (!newTask.desc || !newTask.desc.trim()) {
       Alert.alert('Dados Inválidos', 'Descrição não informada!');
       return;
     }
 
-    try {
-      await axios.post(`${server}/tasks`, {
-        desc: newTask.desc,
-        estimateAt: newTask.date,
-      });
+    const tasks = [...this.state.tasks];
+    tasks.push({
+      id: Math.random(),
+      desc: newTask.desc,
+      estimateAt: newTask.date,
+      doneAt: null,
+    });
 
-      this.setState({showAddTask: false}, this.loadTasks);
-    } catch (e) {
-      showError(e);
-    }
+    this.setState({tasks, showAddTask: false}, this.filterTasks);
+  };
+
+  deleteTask = taskId => {
+    const tasks = this.state.tasks.filter(task => task.id !== taskId)
+    this.setState({tasks}, this.filter)
   };
 
   render() {
@@ -115,7 +119,7 @@ export default class TaskList extends Component {
             data={this.state.visibleTasks}
             keyExtractor={item => `${item.id}`}
             readerItem={({item}) => (
-              <Task {...item} toggleTask={this.toggleTask} />
+              <Task {...item} toggleTask={this.toggleTask} onDelete={this.deleteTask} />
             )}
           />
         </View>
