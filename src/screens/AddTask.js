@@ -5,10 +5,11 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
+  TouchableOpacity,
+  TextInput,
 } from 'react-native';
 
 export default class AddTask extends Component {
-
   render() {
     return (
       <Modal
@@ -20,7 +21,23 @@ export default class AddTask extends Component {
           <View style={styles.background} />
         </TouchableWithoutFeedback>
         <View style={styles.container}>
-            <Text style={styles.header}>Nova Tarefa</Text>
+          <Text style={styles.header}>Nova Tarefa</Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Informe a Descrição"
+            onChangeText={desc => this.setState({desc})}
+            value={this.state.desc}
+          />
+
+          <View style={styles.buttons}>
+            <TouchableOpacity onPress={this.props.onCancel}>
+              <Text style={styles.button}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.save}>
+              <Text style={styles.button}>Salvar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <TouchableWithoutFeedback onPress={this.props.onCancel}>
           <View style={styles.background} />
@@ -36,7 +53,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   container: {
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   header: {
     fontFamily: commonStyles.fontFamily,
@@ -44,6 +61,24 @@ const styles = StyleSheet.create({
     color: commonStyles.colors.secondary,
     textAlign: 'center',
     padding: 15,
-    fontSize: 18
-},
+    fontSize: 18,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    margin: 20,
+    marginRight: 30,
+    color: commonStyles.colors.today,
+  },
+  input: {
+    fontFamily: commonStyles.fontFamily,
+    height: 40,
+    margin: 15,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#E3E3E3',
+    borderRadius: 6,
+  },
 });
