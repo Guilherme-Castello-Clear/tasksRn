@@ -15,25 +15,18 @@ import 'moment/locale/pt-br';
 import commonStyles from '../commonStyles';
 import Task from '../components/Task';
 import AddTask from './AddTask';
+import AsyncStorage from '@react-native-community/async-storage';'@react-native-community/async-storage';
+
+const initialState = {
+  visibleTasks: [],
+  showAddTask: false,
+  showDoneTasks: true,
+  tasks: [],
+}
+
 export default class TaskList extends Component {
   state = {
-    visibleTasks: [],
-    showAddTask: false,
-    showDoneTasks: true,
-    tasks: [
-      {
-        id: Math.random(),
-        desc: 'Comprar livro',
-        estimateAt: new Date(),
-        doneAt: new Date(),
-      },
-      {
-        id: Math.random(),
-        desc: 'Ler livro',
-        estimateAt: new Date(),
-        doneAt: null,
-      },
-    ],
+    ...initialState
   };
 
   toggleFilter = () => {
@@ -50,8 +43,11 @@ export default class TaskList extends Component {
     this.setStaste({tasks}, this.filterTasks);
   };
 
-  componentDidMount = () => {
-    this.filterTasks();
+  componentDidMount = async () => {
+    const stateString = await AsyncStorage.getItem('tasksState')
+    const state = JSON.parse(stateString) || initialState
+    this.setState(state, this.filterTasks)
+
   };
 
   filterTasks = () => {
@@ -64,6 +60,7 @@ export default class TaskList extends Component {
     }
 
     this.setState({visibleTasks});
+    AsyncStorage.setItem('tasksState', JSON.stringify(this.state))
   };
 
   addTask = newTask => {
@@ -84,8 +81,8 @@ export default class TaskList extends Component {
   };
 
   deleteTask = taskId => {
-    const tasks = this.state.tasks.filter(task => task.id !== taskId)
-    this.setState({tasks}, this.filter)
+    const tasks = this.state.tasks.filter(task => task.id !== taskId);
+    this.setState({tasks}, this.filter);
   };
 
   render() {
@@ -119,7 +116,11 @@ export default class TaskList extends Component {
             data={this.state.visibleTasks}
             keyExtractor={item => `${item.id}`}
             readerItem={({item}) => (
-              <Task {...item} toggleTask={this.toggleTask} onDelete={this.deleteTask} />
+              <Task
+                {...item}
+                toggleTask={this.toggleTask}
+                onDelete={this.deleteTask}
+              />
             )}
           />
         </View>
