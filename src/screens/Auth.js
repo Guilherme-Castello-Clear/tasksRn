@@ -15,6 +15,9 @@ export default class Auth extends Component {
   state = {
     name: '',
     email: '',
+    password: '',
+    confirmPassword: '',
+    stageNew: true,
   };
 
   render() {
@@ -25,6 +28,15 @@ export default class Auth extends Component {
           <Text style={styles.subtitle}>
             {this.state.stageNew ? 'Crie a sua conta' : 'Informe seus dados'}
           </Text>
+          {this.state.stageNew && (
+            <AuthInput
+              icon="user"
+              placeholder="Nome"
+              value={this.state.name}
+              style={styles.input}
+              onChangeText={name => this.setState({name})}
+            />
+          )}
           <AuthInput
             icon="at"
             placeholder="E-mail"
@@ -40,10 +52,20 @@ export default class Auth extends Component {
             secureTextEntry={true}
             onChangeText={password => this.setState({password})}
           />
+          {this.state.stageNew && (
+            <AuthInput
+              icon="asterisk"
+              placeholder="Confirmar de Senha"
+              value={this.state.confirmPassword}
+              style={styles.input}
+              secureTextEntry={true}
+              onChangeText={confirmPassword => this.setState({confirmPassword})}
+            />
+          )}
           <TouchableOpacity onPress={this.signinOrSignup} disabled={!validForm}>
             <View>
               <Text style={styles.buttonText}>
-                 Entrar
+                {this.state.stageNew ? 'Registrar' : 'Entrar'}
               </Text>
             </View>
           </TouchableOpacity>
