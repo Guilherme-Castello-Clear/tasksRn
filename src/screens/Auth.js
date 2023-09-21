@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
+import AuthInput from '../components/AuthInput';
 import backgroundImage from '../../assets/imgs/login.jpg';
 import commonStyles from '../commonStyles';
 
