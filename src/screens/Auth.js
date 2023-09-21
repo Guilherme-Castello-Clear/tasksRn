@@ -17,7 +17,15 @@ export default class Auth extends Component {
     email: '',
     password: '',
     confirmPassword: '',
-    stageNew: true,
+    stageNew: false,
+  };
+
+  signinOrSignup = () => {
+    if (this.state.stageNew) {
+      this.signup();
+    } else {
+      this.signin();
+    }
   };
 
   render() {
@@ -70,6 +78,15 @@ export default class Auth extends Component {
             </View>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={{padding: 10}}
+          onPress={() => this.setState({stageNew: !this.state.stageNew})}>
+          <Text style={styles.buttonText}>
+            {this.state.stageNew
+              ? 'Já possui conta?'
+              : 'Ainda não possui conta?'}
+          </Text>
+        </TouchableOpacity>
       </ImageBackground>
     );
   }
